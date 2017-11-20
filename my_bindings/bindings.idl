@@ -1,0 +1,3 @@
+interface Binding {
+        long LLVMFuzzerTestOneInput(DOMString data, unsigned long data_size);
+};

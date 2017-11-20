@@ -9,6 +9,15 @@
 # support 2.8.7.
 cmake_minimum_required(VERSION 2.8.6)
 
+# emcc
+set(CMAKE_C_COMPILER emcc)
+set(CMAKE_CXX_COMPILER em++)
+set(CMAKE_AR emar)
+set(CMAKE_RANLIB emranlib)
+set(CMAKE_MODULE_PATH cmake)
+set(CMAKE_TOOLCHAIN_FILE ${EMCC_PATH}/cmake/Modules/Platform/Emscripten.cmake)
+add_definitions(-s WASM=1 -std=c++11)
+
 project(woff2)
 
 include(GNUInstallDirs)
@@ -67,22 +76,30 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories("src" "include"
                     "${BROTLIDEC_INCLUDE_DIRS}" "${BROTLIENC_INCLUDE_DIRS}")
 
+
+set(CMAKE_AR "emcc")
+set(CMAKE_STATIC_LIBRARY_SUFFIX ".bc")
+set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".bc")
+
 # Common part used by decoder and encoder
-add_library(woff2common
+add_library(woff2common STATIC
             src/table_tags.cc
             src/variable_length.cc
             src/woff2_common.cc)
 
 # WOFF2 Decoder
-add_library(woff2dec
+add_library(woff2dec STATIC
             src/woff2_dec.cc
             src/woff2_out.cc)
 target_link_libraries(woff2dec woff2common "${BROTLIDEC_LIBRARIES}")
 add_executable(woff2_decompress src/woff2_decompress.cc)
-target_link_libraries(woff2_decompress woff2dec)
+set_target_properties(woff2_decompress PROPERTIES LINK_FLAGS "-s WASM=1")
+target_link_libraries(woff2_decompress woff2dec "${BROTLICOMMON_LIBRARIES}")
 
 # WOFF2 Encoder
-add_library(woff2enc
+add_library(woff2enc STATIC
             src/font.cc
             src/glyph.cc
             src/normalize.cc
@@ -90,10 +107,12 @@ add_library(woff2enc
             src/woff2_enc.cc)
 target_link_libraries(woff2enc woff2common "${BROTLIENC_LIBRARIES}")
 add_executable(woff2_compress src/woff2_compress.cc)
-target_link_libraries(woff2_compress woff2enc)
+set_target_properties(woff2_compress PROPERTIES LINK_FLAGS "-s WASM=1")
+target_link_libraries(woff2_compress woff2enc "${BROTLICOMMON_LIBRARIES}")
 
 # WOFF2 info
 add_executable(woff2_info src/woff2_info.cc)
+set_target_properties(woff2_info PROPERTIES LINK_FLAGS "-s WASM=1")
 target_link_libraries(woff2_info woff2common)
 
 foreach(lib woff2common woff2dec woff2enc)
