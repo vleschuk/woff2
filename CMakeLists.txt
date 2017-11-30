@@ -16,7 +16,7 @@ set(CMAKE_AR emar)
 set(CMAKE_RANLIB emranlib)
 set(CMAKE_MODULE_PATH cmake)
 set(CMAKE_TOOLCHAIN_FILE ${EMCC_PATH}/cmake/Modules/Platform/Emscripten.cmake)
-add_definitions(-s WASM=1 -std=c++11)
+add_definitions(-s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s TOTAL_MEMORY=104857600 -std=c++11)
 
 project(woff2)
 
@@ -95,7 +95,7 @@ add_library(woff2dec STATIC
             src/woff2_out.cc)
 target_link_libraries(woff2dec woff2common "${BROTLIDEC_LIBRARIES}")
 add_executable(woff2_decompress src/woff2_decompress.cc)
-set_target_properties(woff2_decompress PROPERTIES LINK_FLAGS "-s WASM=1")
+set_target_properties(woff2_decompress PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(woff2_decompress woff2dec "${BROTLICOMMON_LIBRARIES}")
 
 # WOFF2 Encoder
@@ -107,12 +107,18 @@ add_library(woff2enc STATIC
             src/woff2_enc.cc)
 target_link_libraries(woff2enc woff2common "${BROTLIENC_LIBRARIES}")
 add_executable(woff2_compress src/woff2_compress.cc)
-set_target_properties(woff2_compress PROPERTIES LINK_FLAGS "-s WASM=1")
+set_target_properties(woff2_compress PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(woff2_compress woff2enc "${BROTLICOMMON_LIBRARIES}")
+
+target_link_libraries(woff2enc woff2common "${BROTLIENC_LIBRARIES}")
+add_executable(compress_binding src/compress_binding.cc)
+set_target_properties(compress_binding PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
+target_link_libraries(compress_binding woff2enc "${BROTLICOMMON_LIBRARIES}")
+
 
 # WOFF2 info
 add_executable(woff2_info src/woff2_info.cc)
-set_target_properties(woff2_info PROPERTIES LINK_FLAGS "-s WASM=1")
+set_target_properties(woff2_info PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(woff2_info woff2common)
 
 foreach(lib woff2common woff2dec woff2enc)
