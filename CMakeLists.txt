@@ -98,6 +98,11 @@ add_executable(woff2_decompress src/woff2_decompress.cc)
 set_target_properties(woff2_decompress PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(woff2_decompress woff2dec "${BROTLICOMMON_LIBRARIES}")
 
+add_executable(decompress_binding src/decompress_binding.cc)
+set_target_properties(decompress_binding PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
+target_link_libraries(decompress_binding woff2dec "${BROTLICOMMON_LIBRARIES}")
+
+
 # WOFF2 Encoder
 add_library(woff2enc STATIC
             src/font.cc
@@ -110,7 +115,6 @@ add_executable(woff2_compress src/woff2_compress.cc)
 set_target_properties(woff2_compress PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(woff2_compress woff2enc "${BROTLICOMMON_LIBRARIES}")
 
-target_link_libraries(woff2enc woff2common "${BROTLIENC_LIBRARIES}")
 add_executable(compress_binding src/compress_binding.cc)
 set_target_properties(compress_binding PROPERTIES LINK_FLAGS "-s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1")
 target_link_libraries(compress_binding woff2enc "${BROTLICOMMON_LIBRARIES}")
