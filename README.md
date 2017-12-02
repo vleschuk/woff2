@@ -48,6 +48,47 @@ make
 make install
 ```
 
+### JS build
+To build for JS you need to perform the following steps:
+
+1) Build and install brotli (https://github.com/google/brotli).
+For example to /usr/local/brotli (this path will be used later).
+
+2) Install emsdk toolchain and import required variable by running
+```
+source emsdk_env.sh
+```
+
+3) Build js_brotli:
+
+```
+git clone https://github.com/vleschuk/js_brotli
+cd js_brotli
+mkdir out
+cd out
+cmake ..
+make
+```
+
+Build will not finish successfully, that's expected result, however you should
+obtain the following bit-code files:
+```
+libbrotlidec-static.bc
+libbrotlienc-static.bc
+libbrotlicommon-static.bc
+```
+
+4) Finally build woff2 itself:
+
+```
+git clone https://github.com/vleschuk/woff2
+cd woff2
+mkdir out
+cd out
+EMSDK=/path/to/emsdk BROTLI=/path/to/brotli JS_BROTLI=/path/to/js_brotli ../configure_js.sh ..
+make
+```
+
 ## Run
 
 Ensure the binaries from the build process are in your $PATH, then:
