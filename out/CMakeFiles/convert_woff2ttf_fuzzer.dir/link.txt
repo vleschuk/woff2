@@ -1,0 +1,1 @@
+emcc -o libconvert_woff2ttf_fuzzer.bc  @CMakeFiles/convert_woff2ttf_fuzzer.dir/objects1.rsp

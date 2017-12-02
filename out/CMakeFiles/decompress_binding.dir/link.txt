@@ -1,0 +1,1 @@
+/home/del/work/wa/emsdk-portable/emscripten/1.37.22/em++     -s WASM=1 -s TOTAL_MEMORY=104857600 -s ALLOW_MEMORY_GROWTH=1 @CMakeFiles/decompress_binding.dir/objects1.rsp  -o decompress_binding.js @CMakeFiles/decompress_binding.dir/linklibs.rsp

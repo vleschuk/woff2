@@ -1,0 +1,1 @@
+emcc -o libwoff2common.bc  @CMakeFiles/woff2common.dir/objects1.rsp

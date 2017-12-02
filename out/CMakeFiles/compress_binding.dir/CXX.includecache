@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/woff2/encode.h
+stddef.h
+-
+inttypes.h
+-
+string
+-
+
+/home/del/work/wa/woff2/src/compress_binding.cc
+string
+-
+file.h
+/home/del/work/wa/woff2/src/file.h
+woff2/encode.h
+-
+stdio.h
+-
+emscripten.h
+-
+
+/home/del/work/wa/woff2/src/file.h
+fstream
+-
+iterator
+-
+
